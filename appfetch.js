@@ -1,23 +1,19 @@
-// este archivo contiene la solucion al ejercicio usando el XMLHttpRequest porque fué la primer 
-// forma que en ese momento pude comprender
-// igualmente la adjunto porque pude aprender las dos y eso me gusta
+//este archivo contiene la solucion al ejercicio utilizando fetch
+
 
 const URL = "https://rickandmortyapi.com/api/character/"
-const request = new XMLHttpRequest()
-request.onreadystatechange = ()=>{
-    if(request.readyState === 4){
-        if(request.status === 200){
-            var resultado = request.responseText
-            var resultado_en_objeto = JSON.parse(resultado)
-            console.log(resultado_en_objeto)
-            
-            const main= document.querySelector('#main');
-            const contenedor = document.querySelector('#contenedor_card')
+fetch(URL)
+.then(response => response.json())
+.then(data => allthings(data))
+
+function allthings(data){
+    const main= document.querySelector('#main');
+    const contenedor = document.querySelector('#contenedor_card')
            
-            const fragment = document.createDocumentFragment()
+    const fragment = document.createDocumentFragment()
 
 
-            arrays = Object.values(resultado_en_objeto)
+    arrays = Object.values(data.results)
             
             console.log(arrays)
             main.addEventListener('click', e=>{
@@ -27,7 +23,7 @@ request.onreadystatechange = ()=>{
             create_card();
             
             function create_card(){
-               arrays[1].forEach(characters =>{
+               arrays.forEach(characters =>{
 
                     const card=document.createElement('div');
                     const card_icon=document.createElement('div');
@@ -52,10 +48,6 @@ request.onreadystatechange = ()=>{
                     p_card.setAttribute('id', 'parrafo')
                     p_card.textContent=`Status: ${characters.status} Species:${characters.species}`;
                     p_card_info.setAttribute('id' ,'info_parrafo');
-                    //btn_card.classList.add('btn-agregar')
-                    //btn_card.setAttribute('id', 'btn')
-                    //btn_card.dataset.id=characters.id
-                    //btn_card.textContent="Agregar";
             
                     card.appendChild(card_icon);
                     card_icon.appendChild(img_card);
@@ -63,16 +55,10 @@ request.onreadystatechange = ()=>{
                     card_info.appendChild(tittle_card);
                     card_info.appendChild(p_card_info)
                     card_info.appendChild(p_card);
-                    //card_info.appendChild(btn_card);
                     fragment.appendChild(card)
                 })
                     contenedor.appendChild(fragment)
                     main.appendChild(contenedor);
             
             }
-            
-        }
-    }
 }
-request.open("GET",URL)
-request.send()
